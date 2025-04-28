@@ -5,7 +5,7 @@ import AllocationTable from '../components/AllocationTable';
 import BestTechniqueButton from '../components/BestTechniqueButton';
 import StrategySelector from '../components/StrategySelector';
 import Graphs from '../components/Graphs';
-import { allocateJobs } from '../services/memoryService';
+import { allocateJobs } from '../services/MemoryService';
 import {
   calculateExternalFragmentation,
   calculateTotalWastage,
