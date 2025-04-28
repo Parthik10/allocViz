@@ -1,12 +1,184 @@
-# React + Vite
+Memory Allocation Simulator - MemOpt
+Overview
+MemOpt is an interactive memory allocation simulator that demonstrates how different allocation techniques work in modern operating systems. The tool simulates memory allocation strategies such as First Fit, Best Fit, and Worst Fit, allowing users to visualize how memory blocks are allocated, track fragmentation, and suggest the most efficient memory allocation technique based on the input.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Features
+Simulates three memory allocation strategies:
 
-Currently, two official plugins are available:
+First Fit
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Best Fit
 
-## Expanding the ESLint configuration
+Worst Fit
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Interactive user interface to add jobs (processes) with memory requests.
+
+Memory block allocation with detailed metrics including:
+
+Memory Block Size
+
+Job Size
+
+Allocation Status
+
+Internal Fragmentation
+
+Graphical representation of memory usage and fragmentation using Recharts (Bar and Pie Charts).
+
+Comparison tool that suggests the best allocation strategy based on current memory status and fragmentation.
+
+Tech Stack
+Frontend:
+
+React.js
+
+Bootstrap (for styling)
+
+Recharts (for graphical representation of memory usage)
+
+Backend:
+
+Node.js (if needed for real-time memory data, logging, etc. — can be expanded based on future needs)
+
+Other:
+
+JavaScript (ES6)
+
+npm (package manager)
+
+Installation
+Prerequisites
+Ensure that you have Node.js and npm installed. You can download them from Node.js official website.
+
+Steps to Run Locally
+Clone the repository to your local machine:
+
+bash
+Copy
+Edit
+git clone https://github.com/parthik10/memopt.git
+Navigate to the project directory:
+
+bash
+Copy
+Edit
+cd memopt
+Install dependencies:
+
+bash
+Copy
+Edit
+npm install
+Start the React development server:
+
+bash
+Copy
+Edit
+npm start
+Open your browser and go to http://localhost:3000/ to view the application.
+
+Usage
+Step 1: Select Allocation Strategy
+Choose an allocation strategy from the dropdown:
+
+First Fit
+
+Best Fit
+
+Worst Fit
+
+Step 2: Add Jobs
+You can add jobs with the job number and memory size for each process. Click "Add Job" to add the job to the list.
+
+Step 3: Allocate Jobs
+Once you've added jobs, click the "Allocate Jobs" button to allocate memory to each job based on the selected strategy.
+
+Step 4: View Allocation Results
+After the allocation is complete, the table will display:
+
+Memory Block Size
+
+Job Number
+
+Job Size
+
+Allocation Status (Allocated or Not Allocated)
+
+Internal Fragmentation
+
+Step 5: View Graphs
+Graphs will show the Memory Utilization and Fragmentation (Pie Chart and Bar Chart) to visually represent how well the memory is allocated.
+
+Step 6: Suggest the Best Technique
+Click the "Suggest Best Technique" button to get the best memory allocation strategy based on internal fragmentation, external fragmentation, and wastage.
+
+Components
+SimulatorPage.js: Main page that combines all components and handles user interaction.
+
+StrategySelector.js: Dropdown for selecting the allocation strategy.
+
+AllocationForm.js: Form to input job numbers and memory sizes.
+
+AllocationTable.js: Table to display allocation results with fragmentation and status.
+
+BestTechniqueButton.js: Button to suggest the best allocation technique.
+
+Graphs.js: Displays graphical representations of memory utilization and fragmentation.
+
+memoryService.js: Logic for allocating memory using First Fit, Best Fit, and Worst Fit techniques.
+
+helperFunctions.js: Utility functions for calculating fragmentation and wastage.
+
+How It Works
+Job Allocation:
+
+Users input the job number and job size.
+
+The program attempts to allocate memory to each job based on the selected allocation strategy.
+
+If allocation is successful, the job is marked as "Allocated", otherwise, it is marked as "Not Allocated".
+
+Memory Fragmentation:
+
+Internal Fragmentation: The leftover space within an allocated memory block.
+
+External Fragmentation: Free memory that is scattered across different blocks but cannot be used because no single block is large enough.
+
+Best Technique Suggestion:
+
+After allocation, the program compares different allocation strategies (First Fit, Best Fit, Worst Fit) based on internal and external fragmentation, suggesting the most efficient strategy.
+
+Contributing
+Feel free to fork this repository, make changes, and submit pull requests. Contributions are welcome!
+
+Steps for contributing:
+Fork the repository.
+
+Clone your forked repository:
+
+bash
+Copy
+Edit
+git clone https://github.com/parthik10/memopt.git
+Create a new branch:
+
+bash
+Copy
+Edit
+git checkout -b feature-name
+Commit your changes:
+
+bash
+Copy
+Edit
+git commit -m "Your message describing the change"
+Push your branch:
+
+bash
+Copy
+Edit
+git push origin feature-name
+Open a pull request.
+
+License
+This project is licensed under the MIT License - see the LICENSE file for details.
