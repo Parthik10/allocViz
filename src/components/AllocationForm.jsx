@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 
 function AllocationForm({ onAllocate }) {
-  const [count, setCount] = useState(1);
+  const [count, setCount] = useState(0); // Default value is set to 0
   const [jobs, setJobs] = useState([{ id: 'J1', size: 0 }]);
 
   const handleCount = e => {
-    const n = parseInt(e.target.value) || 1;
+    const n = parseInt(e.target.value, 10) || 0; // Allow 0 when the input is empty
     setCount(n);
-    setJobs(Array.from({ length: n }, (_, i) => ({ id: `J${i+1}`, size: jobs[i]?.size || 0 })));
+    setJobs(Array.from({ length: n }, (_, i) => ({ id: `J${i + 1}`, size: jobs[i]?.size || 0 })));
   };
+
   const setJobSize = (i, val) => {
     const arr = [...jobs]; arr[i].size = parseInt(val) || 0; setJobs(arr);
   };
@@ -20,7 +21,14 @@ function AllocationForm({ onAllocate }) {
       <div className="row mb-3">
         <div className="col-md-4">
           <label className="form-label">Number of Jobs:</label>
-          <input type="number" className="form-control" min="1" value={count} onChange={handleCount} />
+          <input 
+            type="number" 
+            className="form-control" 
+            min="0" 
+            value={count} 
+            onChange={handleCount} 
+            placeholder="0" 
+          />
         </div>
       </div>
       {jobs.map((job, i) => (
@@ -44,4 +52,3 @@ function AllocationForm({ onAllocate }) {
 }
 
 export default AllocationForm;
-
