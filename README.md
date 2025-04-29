@@ -66,9 +66,9 @@ npm install
 
 Start the React development server:
 ```bash
-npm start
+npm run dev
 ```
-Open your browser and go to http://localhost:3000/ to view the application.
+Open your browser and go to http://localhost:5000/ to view the application.
 ## Usage
 
 Usage
