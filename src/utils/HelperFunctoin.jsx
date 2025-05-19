@@ -28,35 +28,75 @@ export function calculateAllocationSuccess(blocks) {
     return ((allocatedBlocks / totalBlocks) * 100).toFixed(2);
 }
 
-
 // Internal fragmentation per allocation
 export function calculateInternalFragmentation(blocks, allocations) {
-    return allocations.map(a => {
-      if (a.blockIdx === null) return { id: a.id, frag: null };
-      const block = blocks[a.blockIdx];
-      return { id: a.id, frag: block.size - a.size };
-    });
-  }
+  // Group allocations by job ID to handle paging (multiple blocks per job)
+  const jobAllocations = {};
   
-  // External fragmentation: sum sizes of free blocks that are too small for any pending job
-  export function calculateExternalFragmentation(blocks, allocations) {
-    const unallocated = allocations.filter(a => a.blockIdx === null);
-    if (!unallocated.length) return 0;
-    const minReq = Math.min(...unallocated.map(a => a.size));
-    return blocks
-      .filter(b => b.isFree && b.size < minReq)
-      .reduce((sum, b) => sum + b.size, 0);
-  }
+  allocations.forEach(a => {
+    if (a.blockIdx === null) return;
+    
+    if (!jobAllocations[a.id]) {
+      jobAllocations[a.id] = {
+        job: a,
+        blocks: [],
+        totalAllocated: 0
+      };
+    }
+    
+    const block = blocks[a.blockIdx];
+    jobAllocations[a.id].blocks.push(block);
+    jobAllocations[a.id].totalAllocated += block.allocatedSize;
+  });
   
-  export function calculateTotalWastage(blocks, allocations) {
-    const internal = calculateInternalFragmentation(blocks, allocations)
-      .reduce((sum, x) => sum + (x.frag || 0), 0);
-    const external = calculateExternalFragmentation(blocks, allocations);
-    return internal + external;
-  }
+  return allocations.map(a => {
+    if (a.blockIdx === null) return { id: a.id, frag: null };
+    
+    // For paging (multiple blocks)
+    const jobAlloc = jobAllocations[a.id];
+    if (jobAlloc && jobAlloc.blocks.length > 1) {
+      // With paging, internal fragmentation is the difference between
+      // total allocated size and the job size
+      return { 
+        id: a.id, 
+        frag: Math.max(0, jobAlloc.totalAllocated - a.size) 
+      };
+    }
+    
+    // For single block allocation
+    const block = blocks[a.blockIdx];
+    return { id: a.id, frag: Math.max(0, block.size - a.size) };
+  });
+}
+
+// External fragmentation: sum sizes of free blocks that are too small for any pending job
+export function calculateExternalFragmentation(blocks, allocations) {
+  const unallocated = allocations.filter(a => a.blockIdx === null);
+  if (!unallocated.length) return 0;
   
-  export function countUnallocated(allocations) {
-    return allocations.filter(a => a.blockIdx === null).length;
-  }
+  const minReq = Math.min(...unallocated.map(a => a.size));
+  
+  // Calculate total size of free blocks that are too small to be useful
+  const externalFrag = blocks
+    .filter(b => b.isFree && b.size < minReq)
+    .reduce((sum, b) => sum + b.size, 0);
+    
+  return externalFrag;
+}
+
+export function calculateTotalWastage(blocks, allocations) {
+  // Calculate internal fragmentation
+  const internal = calculateInternalFragmentation(blocks, allocations)
+    .reduce((sum, x) => sum + (x.frag || 0), 0);
+    
+  // Calculate external fragmentation
+  const external = calculateExternalFragmentation(blocks, allocations);
+  
+  return internal + external;
+}
+
+export function countUnallocated(allocations) {
+  return allocations.filter(a => a.blockIdx === null).length;
+}
   
   

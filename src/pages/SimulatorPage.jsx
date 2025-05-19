@@ -24,6 +24,10 @@ function SimulatorPage() {
     const external = calculateExternalFragmentation(blocks, allocations);
     const totalWastage = calculateTotalWastage(blocks, allocations);
     const unallocated = countUnallocated(allocations);
+    // Debug logs
+    console.log("Jobs:", jobs);
+    console.log("Blocks after allocation:", blocks);
+    console.log("Allocations:", allocations);
     setAllocationsResult({ blocks, allocations });
     setMetrics({ external, totalWastage, unallocated });
   };
@@ -38,14 +42,29 @@ function SimulatorPage() {
     strategies.forEach(strat => {
       const { blocks, allocations } = allocateJobs(memoryBlocks, allocationsResult.allocations.map(j => ({ id: j.id, size: j.size })), strat);
       const waste = calculateTotalWastage(blocks, allocations);
-      comparisonDetails.push({ strategy: strat, totalWastage: waste });
-      if (waste < bestWaste) {
-        bestWaste = waste;
+      const unallocated = countUnallocated(allocations);
+      
+      // Consider both wastage and unallocated jobs in comparison
+      const effectiveWaste = waste + (unallocated * 100); // Penalize unallocated jobs
+      
+      comparisonDetails.push({ 
+        strategy: strat, 
+        totalWastage: waste,
+        unallocated: unallocated,
+        effectiveScore: effectiveWaste 
+      });
+      
+      if (effectiveWaste < bestWaste) {
+        bestWaste = effectiveWaste;
         bestStrat = strat;
       }
     });
 
-    setBestStrategyInfo({ bestStrat, bestWaste, comparisonDetails });
+    setBestStrategyInfo({ 
+      bestStrat, 
+      bestWaste: comparisonDetails.find(d => d.strategy === bestStrat).totalWastage,
+      comparisonDetails 
+    });
   }, [allocationsResult, memoryBlocks]);
 
   return (

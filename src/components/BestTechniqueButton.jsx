@@ -10,17 +10,29 @@ function BestTechniqueButton({ bestStrategyInfo }) {
       <h5>Best Allocation Technique</h5>
       <p><strong>{bestStrat}</strong> with total wastage of <strong>{bestWaste} KB</strong></p>
       <h6>Comparison with other strategies:</h6>
-      <ul>
-        {comparisonDetails.map(({ strategy, totalWastage }) => (
-          <li key={strategy}>
-            {strategy}: {totalWastage} KB {strategy === bestStrat ? '(Best)' : ''}
-          </li>
-        ))}
-      </ul>
-      <p>This strategy is considered best because it results in the lowest total wastage of memory.</p>
+      <table className="table table-sm">
+        <thead>
+          <tr>
+            <th>Strategy</th>
+            <th>Total Wastage (KB)</th>
+            <th>Unallocated Jobs</th>
+          </tr>
+        </thead>
+        <tbody>
+          {comparisonDetails.map(({ strategy, totalWastage, unallocated }) => (
+            <tr key={strategy} className={strategy === bestStrat ? 'table-success' : ''}>
+              <td>{strategy}</td>
+              <td>{totalWastage}</td>
+              <td>{unallocated}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p className="mt-2">
+        <small>The best strategy is determined by considering both memory wastage and the number of unallocated jobs.</small>
+      </p>
     </div>
   );
 }
 
 export default BestTechniqueButton;
-
