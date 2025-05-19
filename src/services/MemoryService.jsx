@@ -80,54 +80,99 @@ export function paging(blocks, requestSize, pageSize = 100) {
     return blocks;
 }
 
-export function allocateJobs(initialBlocks, jobs, strategy, pageSize = 100) {
-  // Deep clone blocks
-  let blocks = initialBlocks.map(b => ({ ...b, allocatedSize: null }));
-  const allocations = jobs.map(job => ({ id: job.id, size: job.size, blockIdx: null }));
+export function allocateJobs(blocks, jobs, strategy) {
+  const allocations = [];
+  let currentTime = 0;
 
-  jobs.forEach((job, jIdx) => {
-    // Clone blocks before allocation to compare state
-    const before = blocks.map(b => ({ ...b }));
+  // Sort jobs based on strategy
+  const sortedJobs = [...jobs];
+  switch (strategy) {
+    case 'First Fit':
+      // Already sorted by arrival time
+      break;
+    case 'Best Fit':
+      sortedJobs.sort((a, b) => a.size - b.size);
+      break;
+    case 'Worst Fit':
+      sortedJobs.sort((a, b) => b.size - a.size);
+      break;
+    default:
+      break;
+  }
 
-    let updated;
+  // Allocate each job
+  sortedJobs.forEach((job, index) => {
+    const allocation = {
+      id: job.id,
+      size: job.size,
+      startTime: currentTime,
+      burstTime: Math.floor(Math.random() * 1000) + 500, // Random burst time between 500-1500ms
+      blockIdx: null,
+      waitingTime: 0,
+      turnaroundTime: 0,
+      duration: 0,
+      endTime: 0
+    };
+
+    // Calculate waiting time based on previous allocation
+    if (index > 0) {
+      const prevAllocation = allocations[index - 1];
+      allocation.waitingTime = Math.max(0, prevAllocation.endTime - allocation.startTime);
+    }
+
+    // Find suitable block based on strategy
+    let blockIndex = -1;
     switch (strategy) {
       case 'First Fit':
-        updated = firstFit(blocks, job.size);
+        blockIndex = blocks.findIndex(block => block.isFree && block.size >= job.size);
         break;
       case 'Best Fit':
-        updated = bestFit(blocks, job.size);
+        blockIndex = blocks
+          .map((block, idx) => ({ ...block, idx }))
+          .filter(block => block.isFree && block.size >= job.size)
+          .sort((a, b) => a.size - b.size)[0]?.idx ?? -1;
         break;
       case 'Worst Fit':
-        updated = worstFit(blocks, job.size);
+        blockIndex = blocks
+          .map((block, idx) => ({ ...block, idx }))
+          .filter(block => block.isFree && block.size >= job.size)
+          .sort((a, b) => b.size - a.size)[0]?.idx ?? -1;
         break;
       case 'Paging':
-        updated = paging(blocks, job.size, pageSize);
+        const pageSize = 100;
+        const pagesNeeded = Math.ceil(job.size / pageSize);
+        let freeBlocks = blocks.filter(b => b.isFree);
+        if (freeBlocks.length >= pagesNeeded) {
+          blockIndex = blocks.findIndex(block => block.isFree);
+        }
         break;
       default:
-        updated = blocks;
+        blockIndex = -1;
     }
 
-    // Find which block(s) were just allocated
-    if (strategy === 'Paging') {
-      // For paging, mark all newly allocated blocks for this job
-      let allocatedIndices = [];
-      for (let i = 0; i < updated.length; i++) {
-        if (before[i].isFree && !updated[i].isFree) {
-          allocatedIndices.push(i);
-        }
-      }
-      if (allocatedIndices.length > 0) {
-        allocations[jIdx].blockIdx = allocatedIndices[0]; // Store the first block index
-      }
+    if (blockIndex !== -1) {
+      // Allocate to block
+      blocks[blockIndex].isFree = false;
+      blocks[blockIndex].allocatedSize = job.size;
+      allocation.blockIdx = blockIndex;
+
+      // Calculate duration and end time for allocated process
+      allocation.duration = allocation.burstTime;
+      allocation.endTime = allocation.startTime + allocation.waitingTime + allocation.duration;
+      currentTime = allocation.endTime;
+
+      // Calculate turnaround time
+      allocation.turnaroundTime = allocation.waitingTime + allocation.burstTime;
     } else {
-      // For other strategies, find the single newly allocated block
-      const idx = updated.findIndex((blk, i) => before[i].isFree && !blk.isFree);
-      if (idx !== -1) {
-        allocations[jIdx].blockIdx = idx;
-      }
+      // For unallocated processes
+      allocation.duration = 0;
+      allocation.endTime = allocation.startTime + allocation.waitingTime;
+      currentTime = allocation.endTime;
+      allocation.turnaroundTime = allocation.waitingTime;
     }
-    // blocks is already updated in-place
+
+    allocations.push(allocation);
   });
 
-  return { blocks, allocations };
+  return allocations;
 }

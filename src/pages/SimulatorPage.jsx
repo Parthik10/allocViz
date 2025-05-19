@@ -4,32 +4,79 @@ import AllocationForm from '../components/AllocationForm';
 import AllocationTable from '../components/AllocationTable';
 import BestTechniqueButton from '../components/BestTechniqueButton';
 import StrategySelector from '../components/StrategySelector';
+import ProcessSelector from '../components/ProcessSelector';
+import AnimatedMemoryVisualizer from '../components/AnimatedMemoryVisualizer';
 import Graphs from '../components/Graphs';
+import MemoryConfig from '../components/MemoryConfig';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 import { allocateJobs } from '../services/MemoryService';
 import {
   calculateExternalFragmentation,
   calculateTotalWastage,
   countUnallocated
 } from '../utils/HelperFunctoin';
+import ProcessSchedulingGraphs from '../components/ProcessSchedulingGraphs';
 
 function SimulatorPage() {
-  const { memoryBlocks } = useContext(MemoryContext);
+  const { memoryBlocks, setMemoryBlocks } = useContext(MemoryContext);
   const [allocationsResult, setAllocationsResult] = useState(null);
-  const [metrics, setMetrics] = useState({ external: 0, totalWastage: 0, unallocated: 0 });
+  const [metrics, setMetrics] = useState({ 
+    external: 0, 
+    totalWastage: 0, 
+    unallocated: 0,
+    utilization: 0,
+    successRate: 0
+  });
   const [selectedStrategy, setSelectedStrategy] = useState('First Fit');
   const [bestStrategyInfo, setBestStrategyInfo] = useState(null);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [inputType, setInputType] = useState('manual');
+  const [canSimulate, setCanSimulate] = useState(false);
+
+  const handleConfigChange = (blocks) => {
+    setMemoryBlocks(blocks);
+    setCanSimulate(true);
+  };
+
+  const handleStrategyChange = (strategy) => {
+    setSelectedStrategy(strategy);
+  };
+
+  const handleProcessesChange = (processes) => {
+    handleAllocate(processes);
+  };
 
   const handleAllocate = jobs => {
-    const { blocks, allocations } = allocateJobs(memoryBlocks, jobs, selectedStrategy);
-    const external = calculateExternalFragmentation(blocks, allocations);
-    const totalWastage = calculateTotalWastage(blocks, allocations);
+    setIsAnimating(true);
+    const allocations = allocateJobs(memoryBlocks, jobs, selectedStrategy);
+    const external = calculateExternalFragmentation(memoryBlocks, allocations);
+    const totalWastage = calculateTotalWastage(memoryBlocks, allocations);
     const unallocated = countUnallocated(allocations);
-    // Debug logs
-    console.log("Jobs:", jobs);
-    console.log("Blocks after allocation:", blocks);
-    console.log("Allocations:", allocations);
-    setAllocationsResult({ blocks, allocations });
-    setMetrics({ external, totalWastage, unallocated });
+    
+    // Calculate additional metrics
+    const totalMemory = memoryBlocks.reduce((sum, block) => sum + block.size, 0);
+    const usedMemory = memoryBlocks.reduce((sum, block) => 
+      sum + (block.allocatedSize || 0), 0);
+    const utilization = (usedMemory / totalMemory) * 100;
+    const successRate = ((allocations.length - unallocated) / allocations.length) * 100;
+    
+    setAllocationsResult({ blocks: memoryBlocks, allocations });
+    setMetrics({ 
+      external, 
+      totalWastage, 
+      unallocated,
+      utilization,
+      successRate
+    });
+    
+    // Reset animation state after a delay
+    setTimeout(() => setIsAnimating(false), 500);
+  };
+
+  const handleBlockClick = (blockIndex) => {
+    // Handle block click if needed
+    console.log('Block clicked:', blockIndex);
   };
 
   useEffect(() => {
@@ -40,12 +87,11 @@ function SimulatorPage() {
     let comparisonDetails = [];
 
     strategies.forEach(strat => {
-      const { blocks, allocations } = allocateJobs(memoryBlocks, allocationsResult.allocations.map(j => ({ id: j.id, size: j.size })), strat);
-      const waste = calculateTotalWastage(blocks, allocations);
+      const allocations = allocateJobs(memoryBlocks, allocationsResult.allocations.map(j => ({ id: j.id, size: j.size })), strat);
+      const waste = calculateTotalWastage(memoryBlocks, allocations);
       const unallocated = countUnallocated(allocations);
       
-      // Consider both wastage and unallocated jobs in comparison
-      const effectiveWaste = waste + (unallocated * 100); // Penalize unallocated jobs
+      const effectiveWaste = waste + (unallocated * 100);
       
       comparisonDetails.push({ 
         strategy: strat, 
@@ -68,32 +114,145 @@ function SimulatorPage() {
   }, [allocationsResult, memoryBlocks]);
 
   return (
-    <div className="container my-5">
-      <h1 className="text-center mb-4">MemOpt - Job Allocation Simulator</h1>
-      <StrategySelector selectedStrategy={selectedStrategy} onChange={setSelectedStrategy} />
-      <AllocationForm onAllocate={handleAllocate} />
+    <div className="d-flex flex-column min-vh-100">
+      <Header />
+      
+      <main className="flex-grow-1">
+        <div className="container-fluid">
+          <div className="row">
+            {/* Controls Section */}
+            <div className="col-md-4">
+              <div className="card mb-4 shadow-sm">
+                <div className="card-body">
+                  <h5 className="card-title fw-bold">
+                    <i className="bi bi-gear me-2"></i>
+                    Memory Configuration
+                  </h5>
+                  <MemoryConfig onConfigChange={handleConfigChange} />
+                </div>
+              </div>
 
-      {allocationsResult && (
-        <>
-          <AllocationTable
-            blocks={allocationsResult.blocks}
-            allocations={allocationsResult.allocations}
-          />
+              <div className="card mb-4 shadow-sm">
+                <div className="card-body">
+                  <h5 className="card-title fw-bold">
+                    <i className="bi bi-diagram-3 me-2"></i>
+                    Allocation Strategy
+                  </h5>
+                  <StrategySelector onStrategyChange={handleStrategyChange} />
+                </div>
+              </div>
 
-          <div className="mb-3">
-            <p>External Fragmentation: {metrics.external} KB</p>
-            <p>Total Wastage: {metrics.totalWastage} KB</p>
-            <p>Unallocated Processes: {metrics.unallocated}</p>
+              <div className="card mb-4 shadow-sm">
+                <div className="card-body">
+                  <h5 className="card-title fw-bold">
+                    <i className="bi bi-cpu me-2"></i>
+                    Process Input
+                  </h5>
+                  <ProcessSelector onProcessesChange={handleProcessesChange} />
+                </div>
+              </div>
+            </div>
+
+            {/* Visualization Section */}
+            <div className="col-md-8">
+              <div className="card mb-4 shadow-sm">
+                <div className="card-body">
+                  <h5 className="card-title fw-bold">
+                    <i className="bi bi-display me-2"></i>
+                    Memory Visualization
+                  </h5>
+                  <AnimatedMemoryVisualizer 
+                    blocks={memoryBlocks} 
+                    allocations={allocationsResult?.allocations || []}
+                    onBlockClick={handleBlockClick}
+                  />
+                </div>
+              </div>
+
+              {/* Process Scheduling Graphs */}
+              <ProcessSchedulingGraphs 
+                allocations={allocationsResult?.allocations || []}
+                blocks={memoryBlocks}
+                metrics={metrics}
+              />
+
+              {/* Best Technique Comparison */}
+              {bestStrategyInfo && (
+                <div className="card mb-4 shadow-sm">
+                  <div className="card-body">
+                    <h5 className="card-title fw-bold">
+                      <i className="bi bi-trophy me-2"></i>
+                      Best Allocation Technique
+                    </h5>
+                    <div className="alert alert-success">
+                      <i className="bi bi-check-circle me-2"></i>
+                      <strong>{bestStrategyInfo.bestStrat}</strong> is the most efficient strategy with total wastage of <strong>{bestStrategyInfo.bestWaste} KB</strong>
+                    </div>
+                    <div className="table-responsive">
+                      <table className="table table-sm table-hover">
+                        <thead className="table-dark">
+                          <tr>
+                            <th>Strategy</th>
+                            <th>Total Wastage (KB)</th>
+                            <th>Unallocated Jobs</th>
+                            <th>Effective Score</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {bestStrategyInfo.comparisonDetails.map(({ strategy, totalWastage, unallocated, effectiveScore }) => (
+                            <tr key={strategy} className={strategy === bestStrategyInfo.bestStrat ? 'table-success' : ''}>
+                              <td>{strategy}</td>
+                              <td>{totalWastage}</td>
+                              <td>{unallocated}</td>
+                              <td>{effectiveScore}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                    <p className="mt-2 text-muted">
+                      <i className="bi bi-info-circle me-2"></i>
+                      <small>The best strategy is determined by considering both memory wastage and the number of unallocated jobs.</small>
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* Performance Metrics */}
+              <div className="card mb-4 shadow-sm">
+                <div className="card-body">
+                  <h5 className="card-title fw-bold">
+                    <i className="bi bi-graph-up me-2"></i>
+                    Performance Metrics
+                  </h5>
+                  <div className="row">
+                    <div className="col-md-4">
+                      <div className="text-center p-3 bg-light rounded">
+                        <h6 className="text-muted">Memory Utilization</h6>
+                        <p className="h4 fw-bold text-primary">{metrics.utilization.toFixed(2)}%</p>
+                      </div>
+                    </div>
+                    <div className="col-md-4">
+                      <div className="text-center p-3 bg-light rounded">
+                        <h6 className="text-muted">Allocation Success Rate</h6>
+                        <p className="h4 fw-bold text-success">{metrics.successRate.toFixed(2)}%</p>
+                      </div>
+                    </div>
+                    <div className="col-md-4">
+                      <div className="text-center p-3 bg-light rounded">
+                        <h6 className="text-muted">External Fragmentation</h6>
+                        <p className="h4 fw-bold text-danger">{metrics.external} KB</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
+        </div>
+      </main>
 
-          <Graphs stats={{
-            memoryUsage: ((1 - metrics.external / allocationsResult.blocks.reduce((a,b)=>a+b.size,0))*100).toFixed(2),
-            fragmentation: ((metrics.external / allocationsResult.blocks.reduce((a,b)=>a+b.size,0))*100).toFixed(2)
-          }} />
-
-          <BestTechniqueButton bestStrategyInfo={bestStrategyInfo} />
-        </>
-      )}
+      <Footer />
     </div>
   );
 }

@@ -1,0 +1,142 @@
+{
+  "combinations": [
+    {
+      "id": "type1",
+      "name": "Small Processes",
+      "description": "5 small processes (10-50KB)",
+      "processes": [
+        { "id": "P1", "size": 10 },
+        { "id": "P2", "size": 20 },
+        { "id": "P3", "size": 30 },
+        { "id": "P4", "size": 40 },
+        { "id": "P5", "size": 50 }
+      ]
+    },
+    {
+      "id": "type2",
+      "name": "Mixed Processes",
+      "description": "8 processes with varying sizes (20-200KB)",
+      "processes": [
+        { "id": "P1", "size": 20 },
+        { "id": "P2", "size": 50 },
+        { "id": "P3", "size": 100 },
+        { "id": "P4", "size": 150 },
+        { "id": "P5", "size": 200 },
+        { "id": "P6", "size": 75 },
+        { "id": "P7", "size": 120 },
+        { "id": "P8", "size": 180 }
+      ]
+    },
+    {
+      "id": "type3",
+      "name": "Large Processes",
+      "description": "4 large processes (150-300KB)",
+      "processes": [
+        { "id": "P1", "size": 150 },
+        { "id": "P2", "size": 200 },
+        { "id": "P3", "size": 250 },
+        { "id": "P4", "size": 300 }
+      ]
+    },
+    {
+      "id": "type4",
+      "name": "Stress Test",
+      "description": "10 processes with extreme sizes (5-400KB)",
+      "processes": [
+        { "id": "P1", "size": 5 },
+        { "id": "P2", "size": 50 },
+        { "id": "P3", "size": 100 },
+        { "id": "P4", "size": 150 },
+        { "id": "P5", "size": 200 },
+        { "id": "P6", "size": 250 },
+        { "id": "P7", "size": 300 },
+        { "id": "P8", "size": 350 },
+        { "id": "P9", "size": 400 },
+        { "id": "P10", "size": 75 }
+      ]
+    },
+    {
+      "id": "type5",
+      "name": "Web Server Load",
+      "description": "6 processes simulating web server load (80-250KB)",
+      "processes": [
+        { "id": "P1", "size": 80 },
+        { "id": "P2", "size": 120 },
+        { "id": "P3", "size": 150 },
+        { "id": "P4", "size": 180 },
+        { "id": "P5", "size": 200 },
+        { "id": "P6", "size": 250 }
+      ]
+    },
+    {
+      "id": "type6",
+      "name": "Database Operations",
+      "description": "7 processes for database operations (100-350KB)",
+      "processes": [
+        { "id": "P1", "size": 100 },
+        { "id": "P2", "size": 150 },
+        { "id": "P3", "size": 200 },
+        { "id": "P4", "size": 250 },
+        { "id": "P5", "size": 300 },
+        { "id": "P6", "size": 350 },
+        { "id": "P7", "size": 180 }
+      ]
+    },
+    {
+      "id": "type7",
+      "name": "Gaming Workload",
+      "description": "5 processes simulating game processes (200-450KB)",
+      "processes": [
+        { "id": "P1", "size": 200 },
+        { "id": "P2", "size": 300 },
+        { "id": "P3", "size": 350 },
+        { "id": "P4", "size": 400 },
+        { "id": "P5", "size": 450 }
+      ]
+    },
+    {
+      "id": "type8",
+      "name": "Video Processing",
+      "description": "8 processes for video processing (150-400KB)",
+      "processes": [
+        { "id": "P1", "size": 150 },
+        { "id": "P2", "size": 200 },
+        { "id": "P3", "size": 250 },
+        { "id": "P4", "size": 300 },
+        { "id": "P5", "size": 350 },
+        { "id": "P6", "size": 400 },
+        { "id": "P7", "size": 180 },
+        { "id": "P8", "size": 220 }
+      ]
+    },
+    {
+      "id": "type9",
+      "name": "System Services",
+      "description": "6 system service processes (50-200KB)",
+      "processes": [
+        { "id": "P1", "size": 50 },
+        { "id": "P2", "size": 80 },
+        { "id": "P3", "size": 100 },
+        { "id": "P4", "size": 120 },
+        { "id": "P5", "size": 150 },
+        { "id": "P6", "size": 200 }
+      ]
+    },
+    {
+      "id": "type10",
+      "name": "Mixed Workload",
+      "description": "9 processes with mixed workload (30-380KB)",
+      "processes": [
+        { "id": "P1", "size": 30 },
+        { "id": "P2", "size": 80 },
+        { "id": "P3", "size": 150 },
+        { "id": "P4", "size": 200 },
+        { "id": "P5", "size": 250 },
+        { "id": "P6", "size": 300 },
+        { "id": "P7", "size": 350 },
+        { "id": "P8", "size": 380 },
+        { "id": "P9", "size": 120 }
+      ]
+    }
+  ]
+} 
