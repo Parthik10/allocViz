@@ -43,39 +43,33 @@ Node.js (if needed for real-time memory data, logging, etc. — can be expanded 
 Other:
 
 JavaScript (ES6)
+## Installation
 
-npm (package manager)
-
-Installation
 Prerequisites
 Ensure that you have Node.js and npm installed. You can download them from Node.js official website.
 
-Steps to Run Locally
+#Steps to Run Locally
+
 Clone the repository to your local machine:
-
-bash
-Copy
-Edit
-git clone https://github.com/parthik10/memopt.git
+```bash
+  git clone https://github.com/parthik10/memopt.git
+```
 Navigate to the project directory:
-
-bash
-Copy
-Edit
+```bash
 cd memopt
+```
+
 Install dependencies:
-
-bash
-Copy
-Edit
+```bash
 npm install
-Start the React development server:
+```
 
-bash
-Copy
-Edit
-npm start
-Open your browser and go to http://localhost:3000/ to view the application.
+Start the React development server:
+```bash
+npm run dev
+```
+Open your browser and go to http://localhost:5000/ to view the application.
+## Usage
 
 Usage
 Step 1: Select Allocation Strategy
@@ -129,7 +123,11 @@ memoryService.js: Logic for allocating memory using First Fit, Best Fit, and Wor
 
 helperFunctions.js: Utility functions for calculating fragmentation and wastage.
 
-How It Works
+
+
+
+## how it works
+
 Job Allocation:
 
 Users input the job number and job size.
@@ -148,37 +146,36 @@ Best Technique Suggestion:
 
 After allocation, the program compares different allocation strategies (First Fit, Best Fit, Worst Fit) based on internal and external fragmentation, suggesting the most efficient strategy.
 
-Contributing
+## Contribution
+
 Feel free to fork this repository, make changes, and submit pull requests. Contributions are welcome!
 
 Steps for contributing:
+
 Fork the repository.
 
 Clone your forked repository:
 
-bash
-Copy
-Edit
+
+```bash
 git clone https://github.com/parthik10/memopt.git
+```
 Create a new branch:
 
-bash
-Copy
-Edit
+```bash
 git checkout -b feature-name
+```
 Commit your changes:
 
-bash
-Copy
-Edit
+```bash
 git commit -m "Your message describing the change"
+```
 Push your branch:
 
-bash
-Copy
-Edit
+```bash
 git push origin feature-name
+```
 Open a pull request.
 
-License
-This project is licensed under the MIT License - see the LICENSE file for details.
+
+
