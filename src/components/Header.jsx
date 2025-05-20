@@ -1,5 +1,4 @@
-import React from 'react';
-import teamRocketLogo from '../assets/logo.png';
+import teamRocketLogo from '../assets/logo.PNG';
 
 function Header() {
   return (
