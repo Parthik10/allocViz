@@ -1,12 +1,8 @@
-import React, { useContext, useState, useEffect } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { MemoryContext } from '../context/MemoryContext';
-import AllocationForm from '../components/AllocationForm';
-import AllocationTable from '../components/AllocationTable';
-import BestTechniqueButton from '../components/BestTechniqueButton';
 import StrategySelector from '../components/StrategySelector';
 import ProcessSelector from '../components/ProcessSelector';
 import AnimatedMemoryVisualizer from '../components/AnimatedMemoryVisualizer';
-import Graphs from '../components/Graphs';
 import MemoryConfig from '../components/MemoryConfig';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
