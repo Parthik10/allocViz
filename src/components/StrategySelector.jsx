@@ -14,7 +14,6 @@ function StrategySelector({ selectedStrategy, onChange }) {
                 <option value="First Fit">First Fit</option>
                 <option value="Best Fit">Best Fit</option>
                 <option value="Worst Fit">Worst Fit</option>
-                <option value="Paging">Paging</option>
             </select>
         </div>
     );
