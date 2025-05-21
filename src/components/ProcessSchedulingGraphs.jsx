@@ -1,3 +1,5 @@
+// ProcessSchedulingGraphs: Visualizes process scheduling and memory metrics using charts.
+
 import React from 'react';
 import {
   BarChart,
@@ -254,4 +256,4 @@ function ProcessSchedulingGraphs({ allocations, blocks, metrics }) {
   );
 }
 
-export default ProcessSchedulingGraphs; 
+export default ProcessSchedulingGraphs;

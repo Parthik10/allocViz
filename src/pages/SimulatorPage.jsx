@@ -1,3 +1,5 @@
+// SimulatorPage: Main page for memory allocation simulation and visualization.
+
 import { useContext, useState, useEffect } from 'react';
 import { MemoryContext } from '../context/MemoryContext';
 import Header from '../components/Header';

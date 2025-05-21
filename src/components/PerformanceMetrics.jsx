@@ -1,3 +1,5 @@
+// PerformanceMetrics: Displays summary metrics (utilization, success rate, fragmentation).
+
 function PerformanceMetrics({ metrics }) {
   return (
     <div className="card mb-4 shadow-sm">

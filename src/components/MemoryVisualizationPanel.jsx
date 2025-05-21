@@ -1,3 +1,5 @@
+// MemoryVisualizationPanel: Shows memory visualization, graphs, best strategy, and metrics.
+
 import AnimatedMemoryVisualizer from './AnimatedMemoryVisualizer';
 import ProcessSchedulingGraphs from './ProcessSchedulingGraphs';
 import BestTechniqueComparison from './BestTechniqueComparison';

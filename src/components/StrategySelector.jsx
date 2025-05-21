@@ -1,4 +1,4 @@
- // Dropdown to select First Fit, Best Fit, Worst Fit, Paging
+// StrategySelector: Dropdown to select memory allocation strategy.
 
  import React from 'react';
 

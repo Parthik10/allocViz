@@ -1,3 +1,5 @@
+// TestRunner: Runs memory allocation tests and displays results for all strategies.
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import MemoryAllocationTest, { runMemoryAllocationTest } from './tests/MemoryAllocationTest';
@@ -98,4 +100,4 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       </div>
     </MemoryProvider>
   </React.StrictMode>
-); 
+);

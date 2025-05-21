@@ -1,3 +1,5 @@
+// ProcessSelector: Allows manual or preset process input for allocation simulation.
+
 import React, { useState } from 'react';
 import processCombinations from '../data/processCombinations.json';
 
@@ -134,4 +136,4 @@ function ProcessSelector({ onProcessesChange }) {
   );
 }
 
-export default ProcessSelector; 
+export default ProcessSelector;

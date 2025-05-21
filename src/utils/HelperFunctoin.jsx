@@ -1,3 +1,5 @@
+// HelperFunctoin: Utility functions for fragmentation, wastage, and allocation metrics.
+
 // Utility functions (calculate fragmentation, etc.)
 
 // helperFunctions.js
@@ -98,5 +100,4 @@ export function calculateTotalWastage(blocks, allocations) {
 export function countUnallocated(allocations) {
   return allocations.filter(a => a.blockIdx === null).length;
 }
-  
-  
+

@@ -1,3 +1,5 @@
+// main.jsx: React app entry point, sets up provider and renders App or TestRunner.
+
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";

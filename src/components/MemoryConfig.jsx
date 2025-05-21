@@ -1,3 +1,5 @@
+// MemoryConfig: Form for configuring memory blocks (count, size, distribution).
+
 import React, { useState } from 'react';
 
 function MemoryConfig({ onConfigChange }) {
@@ -113,4 +115,4 @@ function MemoryConfig({ onConfigChange }) {
   );
 }
 
-export default MemoryConfig; 
+export default MemoryConfig;

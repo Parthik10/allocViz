@@ -1,3 +1,5 @@
+// BestTechniqueComparison: Displays the best allocation strategy and comparison table.
+
 function BestTechniqueComparison({ bestStrategyInfo }) {
   return (
     <div className="card mb-4 shadow-sm">

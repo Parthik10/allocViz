@@ -1,3 +1,5 @@
+// Header: App title and team branding/logo.
+
 import teamRocketLogo from '../assets/logo.PNG';
 
 function Header() {
@@ -32,4 +34,4 @@ function Header() {
   );
 }
 
-export default Header; 
+export default Header;

@@ -1,3 +1,5 @@
+// MemoryService: Implements memory allocation algorithms and job allocation logic.
+
 // Logic functions (First Fit, Best Fit, Worst Fit, Paging)
 
 // memoryService.js

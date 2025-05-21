@@ -1,3 +1,6 @@
+// AnimatedMemoryVisualizer: Visualizes memory blocks and allocations with animation.
+// Uses Framer Motion for smooth transitions and color-coding for allocations.
+
 import React, { useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -69,4 +72,4 @@ function AnimatedMemoryVisualizer({ blocks, allocations }) {
   );
 }
 
-export default AnimatedMemoryVisualizer; 
+export default AnimatedMemoryVisualizer;

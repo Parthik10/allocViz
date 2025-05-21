@@ -1,5 +1,4 @@
-// (Optional) Global state management (selected strategy, memory state)
-// MemoryContext.js
+// MemoryContext: React context for global memory state and selected strategy.
 
 import React, { createContext, useState } from 'react';
 
